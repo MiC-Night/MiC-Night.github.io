@@ -50,23 +50,58 @@
     .error{color:var(--danger); font-weight:700}
 
     /* Slideshow */
-    .slideshow {position: relative; width: 100%; height: 280px; border-radius: 18px; overflow: hidden; margin-bottom: 20px;}
-    .slideshow img {position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s ease;}
-    .slideshow img.active {opacity: 1;}
+.slideshow {
+  position: relative;
+  width: 100%;
+  height: 720px;
+  aspect-ratio: 16 / 9;   /* keeps a widescreen proportion */
+  border-radius: 18px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background: #000;       /* fallback background for videos/images */
+}
+
+/* both images and videos */
+.slideshow img,
+.slideshow video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       /* makes image/video fill area without stretching */
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.slideshow img.active,
+.slideshow video.active {
+  opacity: 1;
+}
+
+
   </style>
 </head>
 <body>
   <header>
     <span class="badge">Dec 13–14, 2025 · Honolulu, HI</span>
     <h1>McNight's Birthday Marathon — Live Fundraiser</h1>
-    <p class="sub">Every dollar fuels A Hopeful Encounter's overseas projects in Southeast Asia. This page pulls the current total straight from a published Google Sheet and updates automatically.</p>
+    <p class="sub">Every dollar fuels A Hopeful Encounter's overseas projects in Southeast Asia.</p>
   </header>
 
   <div class="wrap">
     <div class="slideshow">
-      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" class="active" alt="Beach view">
-      <img src="https://images.unsplash.com/photo-1533055640609-24b498dfd6b0" alt="Running path">
-      <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" alt="Honolulu city">
+      <img src="../assets/img/shoes.jpg" class="active" alt="shoes"/>
+      <img src="../assets/img/shoes_1.jpg" alt="shoes"/>
+      <img src="../assets/img/shoes_2.jpg" alt="shoes"/>
+      <img src="../assets/img/shoes_3.jpg" alt="shoes"/>
+      <img src="../assets/img/shoes_4.jpg" alt="shoes"/>
+      <img src="../assets/img/twoCities.jpg" alt="Fresno Two Cities"/>
+      <img src="../assets/img/jersey_medal.jpg" alt="Fresno Two Cities"/>
+      <video src="../assets/videos/Xiengkhoung_Jersey_Giveaway.mp4" muted autoplay loop playsinline></video>
+      <img src="../assets/img/mcnight_2cities_PR.jpg" alt="Fresno Two Cities"/>
+      <img src="../assets/img/students_1.jpg" alt="Fresno Two Cities"/>
+      <video src="../assets/videos/students_BanPawhai_2024.mp4" muted autoplay loop playsinline></video>
     </div>
 
     <div class="grid">
@@ -83,13 +118,12 @@
         </div>
         <div style="margin-top:18px; display:flex; gap:12px; flex-wrap:wrap">
           <a class="btn primary" id="donateBtn" href="#" target="_blank">Donate on Zeffy</a>
-          <a class="btn ghost" href="#how">How this updates</a>
         </div>
         <p id="err" class="error" style="display:none; margin-top:12px"></p>
       </section>
 
       <aside class="card side">
-        <h3>About the Run</h3>
+        <h3 style="text-align: center;">About the Run</h3>
         <div class="list">
           <div>🏃‍♂️ <span><strong>Birthday Marathon</strong> — Honolulu, during McNight's birthday weekend.</span></div>
           <div>📅 <span><strong>Dates:</strong> Dec 13–14, 2025</span></div>
@@ -99,24 +133,12 @@
       </aside>
     </div>
 
-    <section id="how" class="card" style="margin-top:26px">
-      <h3>How the total updates (tech notes)</h3>
-      <ol style="margin:0; padding-left:18px; color:var(--muted)">
-        <li>We keep a running total in a single Google Sheet cell (e.g., <code>B2</code>).</li>
-        <li>We publish that cell as CSV using Google Sheets' <em>Publish to the web</em> feature.</li>
-        <li>This page fetches that CSV every minute and updates the total + progress bar.</li>
-      </ol>
-    </section>
   </div>
-
-  <footer>
-    Built with ❤️ for A Hopeful Encounter. 100% of proceeds go to programs — fees covered by donors.
-  </footer>
 
   <script>
     const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT0dD9n4u4Evn5lRDjzXO2WfzIhJ-0zuKePd3rxz66oRPPxMMjpa_16utgyK6kyd2OFYK0jU9kM-9fb/pub?gid=0&single=true&output=csv&range=F2";
     const FUNDRAISING_GOAL = 1000;
-    const ZEFFY_DONATE_URL = "https://www.zeffy.com/en-US/campaigns/your-campaign-slug";
+    const ZEFFY_DONATE_URL = "https://www.zeffy.com/en-US/donation-form/mcnights-birthday-marathon-fundraiser";
 
     document.getElementById('donateBtn').href = ZEFFY_DONATE_URL;
     document.getElementById('goalLabel').textContent = `$${FUNDRAISING_GOAL.toLocaleString()}`;
@@ -176,7 +198,7 @@
       slides[current].classList.remove('active');
       current = (current + 1) % slides.length;
       slides[current].classList.add('active');
-    }, 3000);
+    }, 7000);
   </script>
 </body>
 </html>
