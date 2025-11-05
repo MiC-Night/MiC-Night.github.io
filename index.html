@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>McNight's Birthday Marathon — Honolulu Fundraiser</title>
+  <meta name="description" content="Live-updating fundraiser total for McNight's Birthday Marathon in Honolulu. All donations support A Hopeful Encounter's overseas projects in Southeast Asia." />
+  <style>
+    :root{
+      --bg:#0b1b2b;
+      --accent:#00d3a7;
+      --accent2:#ffbe0b;
+      --text:#e9f0f7;
+      --muted:#9fb2c6;
+      --card:#10263b;
+      --danger:#ff5a5f;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji;
+      background: radial-gradient(1200px 600px at 80% -10%, rgba(0,211,167,.15), transparent),
+                  radial-gradient(800px 500px at 10% 10%, rgba(255,190,11,.12), transparent),
+                  var(--bg);
+      color:var(--text);
+    }
+    header{padding:28px 20px 10px; text-align:center}
+    .badge{display:inline-block; padding:6px 10px; border:1px solid rgba(255,255,255,.18); border-radius:999px; color:var(--muted); font-weight:600; font-size:12px; letter-spacing:.4px; text-transform:uppercase; backdrop-filter: blur(12px)}
+    h1{font-size: clamp(28px, 4vw, 46px); margin:12px 0 8px}
+    .sub{color:var(--muted); max-width:800px; margin:0 auto 26px}
+    .wrap{max-width:1100px; margin:0 auto; padding:0 20px 60px}
+    .grid{display:grid; grid-template-columns:1.2fr .8fr; gap:26px}
+    @media (max-width: 940px){ .grid{grid-template-columns:1fr;}}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03)); border:1px solid rgba(255,255,255,.12); border-radius:22px; padding:22px; box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .totalRow{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap}
+    .totalLabel{color:var(--muted); font-weight:600; letter-spacing:.3px}
+    .total{font-size: clamp(38px, 6vw, 64px); font-weight:800; letter-spacing:.5px}
+    .goal{color:var(--muted)}
+    .progressTrack{height:16px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden; margin:14px 0 6px}
+    .progressBar{height:100%; width:0%; background: linear-gradient(90deg, var(--accent), #27e0bb, var(--accent2)); transition: width .9s ease}
+    .pct{font-weight:700}
+    .row{display:flex; align-items:center; gap:14px; flex-wrap:wrap; color:var(--muted)}
+    .pill{border:1px dashed rgba(255,255,255,.22); padding:6px 10px; border-radius:999px; font-size:12px}
+    .btn{display:inline-flex; align-items:center; justify-content:center; gap:10px; text-decoration:none; padding:14px 18px; border-radius:14px; font-weight:700; border:1px solid rgba(255,255,255,.18)}
+    .btn.primary{background:linear-gradient(180deg, var(--accent), #1abf9b); color:#053e34}
+    .btn.ghost{color:var(--text);}
+    .side h3{margin:10px 0 6px}
+    .list{display:grid; gap:10px; font-size:14px; color:var(--muted)}
+    .list div{display:flex; gap:10px; align-items:flex-start}
+    footer{opacity:.8; color:var(--muted); text-align:center; padding:28px}
+    .error{color:var(--danger); font-weight:700}
+
+    /* Slideshow */
+    .slideshow {position: relative; width: 100%; height: 280px; border-radius: 18px; overflow: hidden; margin-bottom: 20px;}
+    .slideshow img {position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s ease;}
+    .slideshow img.active {opacity: 1;}
+  </style>
+</head>
+<body>
+  <header>
+    <span class="badge">Dec 13–14, 2025 · Honolulu, HI</span>
+    <h1>McNight's Birthday Marathon — Live Fundraiser</h1>
+    <p class="sub">Every dollar fuels A Hopeful Encounter's overseas projects in Southeast Asia. This page pulls the current total straight from a published Google Sheet and updates automatically.</p>
+  </header>
+
+  <div class="wrap">
+    <div class="slideshow">
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" class="active" alt="Beach view">
+      <img src="https://images.unsplash.com/photo-1533055640609-24b498dfd6b0" alt="Running path">
+      <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" alt="Honolulu city">
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <div class="totalRow">
+          <span class="totalLabel">Total Raised</span>
+          <span id="total" class="total">$0</span>
+          <span class="goal">of <strong id="goalLabel">$1,000</strong> goal</span>
+        </div>
+        <div class="progressTrack"><div id="bar" class="progressBar"></div></div>
+        <div class="row">
+          <span>Progress: <span id="pct" class="pct">0%</span></span>
+          <span id="lastUpdated" class="pill">Last updated — just now</span>
+        </div>
+        <div style="margin-top:18px; display:flex; gap:12px; flex-wrap:wrap">
+          <a class="btn primary" id="donateBtn" href="#" target="_blank">Donate on Zeffy</a>
+          <a class="btn ghost" href="#how">How this updates</a>
+        </div>
+        <p id="err" class="error" style="display:none; margin-top:12px"></p>
+      </section>
+
+      <aside class="card side">
+        <h3>About the Run</h3>
+        <div class="list">
+          <div>🏃‍♂️ <span><strong>Birthday Marathon</strong> — Honolulu, during McNight's birthday weekend.</span></div>
+          <div>📅 <span><strong>Dates:</strong> Dec 13–14, 2025</span></div>
+          <div>🎯 <span><strong>Goal:</strong> $1,000</span></div>
+          <div>🌏 <span><strong>Impact:</strong> A Hopeful Encounter’s overseas projects in Southeast Asia</span></div>
+        </div>
+      </aside>
+    </div>
+
+    <section id="how" class="card" style="margin-top:26px">
+      <h3>How the total updates (tech notes)</h3>
+      <ol style="margin:0; padding-left:18px; color:var(--muted)">
+        <li>We keep a running total in a single Google Sheet cell (e.g., <code>B2</code>).</li>
+        <li>We publish that cell as CSV using Google Sheets' <em>Publish to the web</em> feature.</li>
+        <li>This page fetches that CSV every minute and updates the total + progress bar.</li>
+      </ol>
+    </section>
+  </div>
+
+  <footer>
+    Built with ❤️ for A Hopeful Encounter. 100% of proceeds go to programs — fees covered by donors.
+  </footer>
+
+  <script>
+    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/PASTE_YOUR_PUBLISHED_LINK_HERE/pub?gid=0&single=true&output=csv&range=B2";
+    const FUNDRAISING_GOAL = 1000;
+    const ZEFFY_DONATE_URL = "https://www.zeffy.com/en-US/campaigns/your-campaign-slug";
+
+    document.getElementById('donateBtn').href = ZEFFY_DONATE_URL;
+    document.getElementById('goalLabel').textContent = `$${FUNDRAISING_GOAL.toLocaleString()}`;
+    const fmt = n => `$${Number(n).toLocaleString(undefined, {maximumFractionDigits:0})}`;
+
+    async function fetchTotal(){
+      const url = SHEET_CSV_URL + `&cachebust=${Date.now()}`;
+      const res = await fetch(url, { cache: 'no-store' });
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      const raw = text.trim().replace(/[,$\s]/g, '');
+      const val = Number(raw);
+      if(Number.isNaN(val)) throw new Error(`Could not parse total from: "${text}"`);
+      return val;
+    }
+
+    function animateCount(el, from, to, duration=700){
+      const start = performance.now();
+      function tick(now){
+        const t = Math.min(1, (now - start)/duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        const cur = from + (to - from)*eased;
+        el.textContent = fmt(cur);
+        if(t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    async function refresh(){
+      const totalEl = document.getElementById('total');
+      const pctEl = document.getElementById('pct');
+      const barEl = document.getElementById('bar');
+      const errEl = document.getElementById('err');
+      try{
+        errEl.style.display = 'none';
+        const old = Number(totalEl.textContent.replace(/[^0-9.]/g, '')) || 0;
+        const total = await fetchTotal();
+        animateCount(totalEl, old, total);
+        const pct = Math.max(0, Math.min(100, Math.round((total / FUNDRAISING_GOAL) * 100)));
+        pctEl.textContent = pct + '%';
+        barEl.style.width = pct + '%';
+        document.getElementById('lastUpdated').textContent = 'Last updated — ' + new Date().toLocaleTimeString();
+      }catch(err){
+        console.error(err);
+        errEl.textContent = 'Update failed — check your published CSV URL (B2) and try again.';
+        errEl.style.display = '';
+      }
+    }
+
+    refresh();
+    setInterval(refresh, 60 * 1000);
+
+    // Slideshow script
+    const slides = document.querySelectorAll('.slideshow img');
+    let current = 0;
+    setInterval(() => {
+      slides[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+    }, 3000);
+  </script>
+</body>
+</html>
