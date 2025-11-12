@@ -136,70 +136,97 @@
 
   </div>
 
-  <script>
-    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT0dD9n4u4Evn5lRDjzXO2WfzIhJ-0zuKePd3rxz66oRPPxMMjpa_16utgyK6kyd2OFYK0jU9kM-9fb/pub?gid=0&single=true&output=csv&range=F2";
-    const FUNDRAISING_GOAL = 1000;
-    const ZEFFY_DONATE_URL = "https://www.zeffy.com/en-US/donation-form/mcnights-birthday-marathon-fundraiser";
+ <script>
+  const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT0dD9n4u4Evn5lRDjzXO2WfzIhJ-0zuKePd3rxz66oRPPxMMjpa_16utgyK6kyd2OFYK0jU9kM-9fb/pub?gid=0&single=true&output=csv&range=F2";
+  const FUNDRAISING_GOAL = 1000;
+  const ZEFFY_DONATE_URL = "https://www.zeffy.com/en-US/donation-form/mcnights-birthday-marathon-fundraiser";
 
-    document.getElementById('donateBtn').href = ZEFFY_DONATE_URL;
-    document.getElementById('goalLabel').textContent = `$${FUNDRAISING_GOAL.toLocaleString()}`;
-    const fmt = n => `$${Number(n).toLocaleString(undefined, {maximumFractionDigits:0})}`;
+  document.getElementById('donateBtn').href = ZEFFY_DONATE_URL;
+  document.getElementById('goalLabel').textContent = `$${FUNDRAISING_GOAL.toLocaleString()}`;
+  const fmt = n => `$${Number(n).toLocaleString(undefined, {maximumFractionDigits:0})}`;
 
-    async function fetchTotal(){
-      const url = SHEET_CSV_URL + `&cachebust=${Date.now()}`;
-      const res = await fetch(url, { cache: 'no-store' });
-      if(!res.ok) throw new Error(`HTTP ${res.status}`);
-      const text = await res.text();
-      const raw = text.trim().replace(/[,$\s]/g, '');
-      const val = Number(raw);
-      if(Number.isNaN(val)) throw new Error(`Could not parse total from: "${text}"`);
-      return val;
+  async function fetchTotal(){
+    const url = SHEET_CSV_URL + `&cachebust=${Date.now()}`;
+    const res = await fetch(url, { cache: 'no-store' });
+
+    if(!res.ok){
+      // Surface the HTTP status so you can see e.g. 404/403/500
+      throw new Error(`Fetch failed (HTTP ${res.status})`);
     }
 
-    function animateCount(el, from, to, duration=700){
-      const start = performance.now();
-      function tick(now){
-        const t = Math.min(1, (now - start)/duration);
-        const eased = 1 - Math.pow(1 - t, 3);
-        const cur = from + (to - from)*eased;
-        el.textContent = fmt(cur);
-        if(t < 1) requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
+    const text = await res.text();
+    const trimmed = text.replace(/^\uFEFF/, "").trim(); // strip BOM if present
+
+    // If Google returns HTML (publish off / permission / error), fail fast with the first few chars
+    if (trimmed.startsWith("<")) {
+      throw new Error("Endpoint returned HTML (publishing likely off or URL incorrect).");
     }
 
-    async function refresh(){
-      const totalEl = document.getElementById('total');
-      const pctEl = document.getElementById('pct');
-      const barEl = document.getElementById('bar');
-      const errEl = document.getElementById('err');
-      try{
-        errEl.style.display = 'none';
-        const old = Number(totalEl.textContent.replace(/[^0-9.]/g, '')) || 0;
-        const total = await fetchTotal();
-        animateCount(totalEl, old, total);
-        const pct = Math.max(0, Math.min(100, Math.round((total / FUNDRAISING_GOAL) * 100)));
-        pctEl.textContent = pct + '%';
-        barEl.style.width = pct + '%';
-        document.getElementById('lastUpdated').textContent = 'Last updated — ' + new Date().toLocaleTimeString();
-      }catch(err){
-        console.error(err);
-        errEl.textContent = 'Update failed — check your published CSV URL (B2) and try again.';
-        errEl.style.display = '';
-      }
+    // Be robust: extract the first numeric token (handles $1,234.00, 1 234, “$1,234 USD”, etc.)
+    const m = trimmed.match(/-?\d{1,3}(?:[,\s]\d{3})*(?:\.\d+)?|-?\d+(?:\.\d+)?/);
+    if (!m) {
+      throw new Error(`No numeric value found in CSV cell (range=F2). Raw: "${trimmed.slice(0, 80)}"`);
     }
 
-    refresh();
-    setInterval(refresh, 60 * 1000);
+    const raw = m[0].replace(/[,\s$]/g, "");
+    const val = Number(raw);
 
-    // Slideshow script
-    const slides = document.querySelectorAll('.slideshow img');
-    let current = 0;
-    setInterval(() => {
-      slides[current].classList.remove('active');
-      current = (current + 1) % slides.length;
-      slides[current].classList.add('active');
-    }, 7000);
-  </script>
+    if (Number.isNaN(val)) {
+      throw new Error(`Parsed value is NaN from "${m[0]}". Check cell F2 formatting (should be a number).`);
+    }
+
+    return val;
+  }
+
+  function animateCount(el, from, to, duration=700){
+    const start = performance.now();
+    function tick(now){
+      const t = Math.min(1, (now - start)/duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const cur = from + (to - from)*eased;
+      el.textContent = fmt(cur);
+      if(t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  async function refresh(){
+    const totalEl = document.getElementById('total');
+    const pctEl = document.getElementById('pct');
+    const barEl = document.getElementById('bar');
+    const errEl = document.getElementById('err');
+    try{
+      errEl.style.display = 'none';
+      const old = Number(totalEl.textContent.replace(/[^0-9.]/g, '')) || 0;
+      const total = await fetchTotal();
+      animateCount(totalEl, old, total);
+      const pct = Math.max(0, Math.min(100, Math.round((total / FUNDRAISING_GOAL) * 100)));
+      pctEl.textContent = pct + '%';
+      barEl.style.width = pct + '%';
+      document.getElementById('lastUpdated').textContent = 'Last updated — ' + new Date().toLocaleTimeString();
+    }catch(err){
+      console.error(err);
+      // More helpful message; keep the short version on screen
+      errEl.textContent = 'Update failed — ' + err.message + ' (check Publish to web, tab GID & range=F2).';
+      errEl.style.display = '';
+    }
+  }
+
+  refresh();
+  setInterval(refresh, 60 * 1000);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) refresh();
+  });
+
+  // Slideshow: rotate both images & videos
+  const slides = document.querySelectorAll('.slideshow img, .slideshow video');
+  let current = 0;
+  setInterval(() => {
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  }, 7000);
+</script>
+
 </body>
 </html>
