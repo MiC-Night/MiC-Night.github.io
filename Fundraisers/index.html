@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>McNight's Birthday Marathon — Honolulu Fundraiser</title>
+  <meta name="description" content="Live-updating fundraiser total for McNight's Birthday Marathon in Honolulu. All donations support A Hopeful Encounter's overseas projects in Southeast Asia." />
+  <style>
+    :root{
+      --bg:#0b1b2b;
+      --accent:#00d3a7;
+      --accent2:#ffbe0b;
+      --text:#e9f0f7;
+      --muted:#9fb2c6;
+      --card:#10263b;
+      --danger:#ff5a5f;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji;
+      background: radial-gradient(1200px 600px at 80% -10%, rgba(0,211,167,.15), transparent),
+                  radial-gradient(800px 500px at 10% 10%, rgba(255,190,11,.12), transparent),
+                  var(--bg);
+      color:var(--text);
+    }
+    header{padding:28px 20px 10px; text-align:center}
+    .badge{display:inline-block; padding:6px 10px; border:1px solid rgba(255,255,255,.18); border-radius:999px; color:var(--muted); font-weight:600; font-size:12px; letter-spacing:.4px; text-transform:uppercase; backdrop-filter: blur(12px)}
+    h1{font-size: clamp(28px, 4vw, 46px); margin:12px 0 8px}
+    .sub{color:var(--muted); max-width:800px; margin:0 auto 26px}
+    .wrap{max-width:1100px; margin:0 auto; padding:0 20px 60px}
+    .grid{display:grid; grid-template-columns:1.2fr .8fr; gap:26px}
+    @media (max-width: 940px){ .grid{grid-template-columns:1fr;}}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03)); border:1px solid rgba(255,255,255,.12); border-radius:22px; padding:22px; box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .totalRow{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap}
+    .totalLabel{color:var(--muted); font-weight:600; letter-spacing:.3px}
+    .total{font-size: clamp(38px, 6vw, 64px); font-weight:800; letter-spacing:.5px}
+    .goal{color:var(--muted)}
+    .progressTrack{height:16px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden; margin:14px 0 6px}
+    .progressBar{height:100%; width:0%; background: linear-gradient(90deg, var(--accent), #27e0bb, var(--accent2)); transition: width .9s ease}
+    .pct{font-weight:700}
+    .row{display:flex; align-items:center; gap:14px; flex-wrap:wrap; color:var(--muted)}
+    .pill{border:1px dashed rgba(255,255,255,.22); padding:6px 10px; border-radius:999px; font-size:12px}
+    .btn{display:inline-flex; align-items:center; justify-content:center; gap:10px; text-decoration:none; padding:14px 18px; border-radius:14px; font-weight:700; border:1px solid rgba(255,255,255,.18)}
+    .btn.primary{background:linear-gradient(180deg, var(--accent), #1abf9b); color:#053e34}
+    .btn.ghost{color:var(--text);}
+    .side h3{margin:10px 0 6px}
+    .list{display:grid; gap:10px; font-size:14px; color:var(--muted)}
+    .list div{display:flex; gap:10px; align-items:flex-start}
+    footer{opacity:.8; color:var(--muted); text-align:center; padding:28px}
+    .error{color:var(--danger); font-weight:700}
+
+    /* Slideshow */
+.slideshow {
+  position: relative;
+  width: 100%;
+  height: 720px;
+  aspect-ratio: 16 / 9;   /* keeps a widescreen proportion */
+  border-radius: 18px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background: #000;       /* fallback background for videos/images */
+}
+
+/* both images and videos */
+.slideshow img,
+.slideshow video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       /* makes image/video fill area without stretching */
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.slideshow img.active,
+.slideshow video.active {
+  opacity: 1;
+}
+
+
+  </style>
+</head>
+<body>
+  <header>
+    <span class="badge">Dec 13–14, 2025 · Honolulu, HI</span>
+    <h1>McNight's Birthday Marathon — Live Fundraiser</h1>
+    <p class="sub">Every dollar fuels A Hopeful Encounter's overseas projects in Southeast Asia.</p>
+  </header>
+
+  <div class="wrap">
+    <div class="slideshow">
+      <img src="../assets/img/shoes.jpg" class="active" alt="shoes"/>
+      <img src="../assets/img/shoes_1.jpg" alt="shoes"/>
+      <img src="../assets/img/shoes_2.jpg" alt="shoes"/>
+      <img src="../assets/img/shoes_3.jpg" alt="shoes"/>
+      <img src="../assets/img/shoes_4.jpg" alt="shoes"/>
+      <img src="../assets/img/twoCities.jpg" alt="Fresno Two Cities"/>
+      <img src="../assets/img/jersey_medal.jpg" alt="Fresno Two Cities"/>
+      <video src="../assets/videos/Xiengkhoung_Jersey_Giveaway.mp4" muted autoplay loop playsinline></video>
+      <img src="../assets/img/mcnight_2Cities_PR.jpg" alt="Fresno Two Cities"/>
+      <img src="../assets/img/students_1.jpg" alt="Fresno Two Cities"/>
+      <img src="../assets/img/twocities_1.jpg" alt="Fresno Two Cities"/>
+      <video src="../assets/videos/students_BanPawhai_2024.mp4" muted autoplay loop playsinline></video>
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <div class="totalRow">
+          <span class="totalLabel">Total Raised</span>
+          <span id="total" class="total">$0</span>
+          <span class="goal">of <strong id="goalLabel">$1,000</strong> goal</span>
+        </div>
+        <div class="progressTrack"><div id="bar" class="progressBar"></div></div>
+        <div class="row">
+          <span>Progress: <span id="pct" class="pct">0%</span></span>
+          <span id="lastUpdated" class="pill">Last updated — just now</span>
+        </div>
+        <div style="margin-top:18px; display:flex; gap:12px; flex-wrap:wrap">
+          <a class="btn primary" id="donateBtn" href="#" target="_blank">Donate on Zeffy</a>
+        </div>
+        <p id="err" class="error" style="display:none; margin-top:12px"></p>
+      </section>
+
+      <aside class="card side">
+        <h3 style="text-align: center;">About the Run</h3>
+        <div class="list">
+          <div>🏃‍♂️ <span><strong>Birthday Marathon</strong> — Honolulu, during McNight's birthday weekend.</span></div>
+          <div>📅 <span><strong>Dates:</strong> Dec 13–14, 2025</span></div>
+          <div>🎯 <span><strong>Goal:</strong> $1,000</span></div>
+          <div>🌏 <span><strong>Impact:</strong> A Hopeful Encounter’s overseas projects in Southeast Asia</span></div>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+
+ <script>
+  const MANUAL_TOTAL = 1177; // 👈 put your current total here
+  const FUNDRAISING_GOAL = 1000;
+  const ZEFFY_DONATE_URL = "https://www.zeffy.com/en-US/donation-form/mcnights-birthday-marathon-fundraiser";
+
+  document.getElementById('donateBtn').href = ZEFFY_DONATE_URL;
+  document.getElementById('goalLabel').textContent = `$${FUNDRAISING_GOAL.toLocaleString()}`;
+  const fmt = n => `$${Number(n).toLocaleString(undefined, {maximumFractionDigits:0})}`;
+
+  function refresh(){
+    const totalEl = document.getElementById('total');
+    const pctEl = document.getElementById('pct');
+    const barEl = document.getElementById('bar');
+    const total = MANUAL_TOTAL;
+    totalEl.textContent = fmt(total);
+    const pct = Math.max(0, Math.min(100, Math.round((total / FUNDRAISING_GOAL) * 100)));
+    pctEl.textContent = pct + '%';
+    barEl.style.width = pct + '%';
+    document.getElementById('lastUpdated').textContent = 'Last updated — manual entry';
+  }
+
+  refresh();
+
+  // Slideshow rotation (still works)
+  const slides = document.querySelectorAll('.slideshow img, .slideshow video');
+  let current = 0;
+  setInterval(() => {
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  }, 7000);
+</script>
+
+</body>
+</html>

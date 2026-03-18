@@ -1,173 +1,290 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>McNight's Birthday Marathon — Honolulu Fundraiser</title>
-  <meta name="description" content="Live-updating fundraiser total for McNight's Birthday Marathon in Honolulu. All donations support A Hopeful Encounter's overseas projects in Southeast Asia." />
-  <style>
-    :root{
-      --bg:#0b1b2b;
-      --accent:#00d3a7;
-      --accent2:#ffbe0b;
-      --text:#e9f0f7;
-      --muted:#9fb2c6;
-      --card:#10263b;
-      --danger:#ff5a5f;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji;
-      background: radial-gradient(1200px 600px at 80% -10%, rgba(0,211,167,.15), transparent),
-                  radial-gradient(800px 500px at 10% 10%, rgba(255,190,11,.12), transparent),
-                  var(--bg);
-      color:var(--text);
-    }
-    header{padding:28px 20px 10px; text-align:center}
-    .badge{display:inline-block; padding:6px 10px; border:1px solid rgba(255,255,255,.18); border-radius:999px; color:var(--muted); font-weight:600; font-size:12px; letter-spacing:.4px; text-transform:uppercase; backdrop-filter: blur(12px)}
-    h1{font-size: clamp(28px, 4vw, 46px); margin:12px 0 8px}
-    .sub{color:var(--muted); max-width:800px; margin:0 auto 26px}
-    .wrap{max-width:1100px; margin:0 auto; padding:0 20px 60px}
-    .grid{display:grid; grid-template-columns:1.2fr .8fr; gap:26px}
-    @media (max-width: 940px){ .grid{grid-template-columns:1fr;}}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03)); border:1px solid rgba(255,255,255,.12); border-radius:22px; padding:22px; box-shadow:0 10px 30px rgba(0,0,0,.25)}
-    .totalRow{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap}
-    .totalLabel{color:var(--muted); font-weight:600; letter-spacing:.3px}
-    .total{font-size: clamp(38px, 6vw, 64px); font-weight:800; letter-spacing:.5px}
-    .goal{color:var(--muted)}
-    .progressTrack{height:16px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden; margin:14px 0 6px}
-    .progressBar{height:100%; width:0%; background: linear-gradient(90deg, var(--accent), #27e0bb, var(--accent2)); transition: width .9s ease}
-    .pct{font-weight:700}
-    .row{display:flex; align-items:center; gap:14px; flex-wrap:wrap; color:var(--muted)}
-    .pill{border:1px dashed rgba(255,255,255,.22); padding:6px 10px; border-radius:999px; font-size:12px}
-    .btn{display:inline-flex; align-items:center; justify-content:center; gap:10px; text-decoration:none; padding:14px 18px; border-radius:14px; font-weight:700; border:1px solid rgba(255,255,255,.18)}
-    .btn.primary{background:linear-gradient(180deg, var(--accent), #1abf9b); color:#053e34}
-    .btn.ghost{color:var(--text);}
-    .side h3{margin:10px 0 6px}
-    .list{display:grid; gap:10px; font-size:14px; color:var(--muted)}
-    .list div{display:flex; gap:10px; align-items:flex-start}
-    footer{opacity:.8; color:var(--muted); text-align:center; padding:28px}
-    .error{color:var(--danger); font-weight:700}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>McNight Thao | About Me</title>
+    <style>
+        :root {
+            --bg-color: #e5e7eb;
+            --paper-white: #ffffff;
+            --text-color: #333333;
+            --clippy-bg: #ffffcc;
+        }
 
-    /* Slideshow */
-.slideshow {
-  position: relative;
-  width: 100%;
-  height: 720px;
-  aspect-ratio: 16 / 9;   /* keeps a widescreen proportion */
-  border-radius: 18px;
-  overflow: hidden;
-  margin-bottom: 20px;
-  background: #000;       /* fallback background for videos/images */
-}
+        body {
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            font-family: 'Times New Roman', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
 
-/* both images and videos */
-.slideshow img,
-.slideshow video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;       /* makes image/video fill area without stretching */
-  opacity: 0;
-  transition: opacity 1s ease;
-}
+        /* --- FULLSCREEN MODAL --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            cursor: zoom-out;
+        }
 
-.slideshow img.active,
-.slideshow video.active {
-  opacity: 1;
-}
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 85vh;
+            border: 10px solid white;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
 
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
-  </style>
+        /* --- DOCUMENT STRUCTURE --- */
+        .document {
+            background-color: var(--paper-white);
+            width: 100%;
+            max-width: 850px;
+            min-height: 1100px;
+            margin: 60px 0;
+            padding: 60px 80px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .hero-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 40px;
+        }
+
+        /* POLAROID STYLING */
+        .polaroid {
+            background: white;
+            padding: 15px 15px 30px 15px; /* Wider bottom for the caption */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transform: rotate(2deg); /* Organic tilt */
+            width: 180px;
+            text-align: center;
+            cursor: zoom-in;
+            transition: transform 0.3s ease;
+            border: 1px solid #ddd;
+        }
+
+        .polaroid:hover {
+            transform: rotate(0deg) scale(1.05);
+            z-index: 20;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .polaroid-caption {
+            font-family: 'Permanent Marker', cursive, 'Courier New'; /* Marker font looks great here */
+            font-size: 14px;
+            color: #222;
+            line-height: 1.2;
+        }
+
+        .bobby-pin {
+            position: absolute;
+            top: -25px;
+            right: 100px; /* Aligned with polaroid position */
+            width: 12px;
+            height: 50px;
+            background-color: #333;
+            border-radius: 10px;
+            z-index: 30;
+            pointer-events: none;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .bobby-pin::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 20px; height: 8px;
+            background-color: #333;
+            border-radius: 5px;
+        }
+
+        /* --- TEXT & CURSOR --- */
+        .content {
+            line-height: 1.6;
+            color: var(--text-color);
+            font-size: 18px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.1em;
+            background-color: var(--text-color);
+            margin-left: 2px;
+            vertical-align: bottom;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* --- CLIPPY --- */
+        #clippy-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        #speech-bubble {
+            background: var(--clippy-bg);
+            border: 1px solid black;
+            border-radius: 10px;
+            padding: 15px;
+            width: 200px;
+            margin-bottom: 10px;
+            display: none;
+            font-family: 'Arial', sans-serif;
+            font-size: 13px;
+            position: relative;
+            box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+        }
+
+        #speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 20px;
+            border-width: 10px 10px 0 10px;
+            border-style: solid;
+            border-color: black transparent transparent transparent;
+        }
+
+        .clippy-icon {
+            width: 150px;
+            cursor: pointer;
+        }
+
+        .clippy-icon img { width: 100%; }
+
+        @media (max-width: 768px) {
+            .document { padding: 40px 30px; }
+            .hero-container { justify-content: center; }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <span class="badge">Dec 13–14, 2025 · Honolulu, HI</span>
-    <h1>McNight's Birthday Marathon — Live Fundraiser</h1>
-    <p class="sub">Every dollar fuels A Hopeful Encounter's overseas projects in Southeast Asia.</p>
-  </header>
 
-  <div class="wrap">
-    <div class="slideshow">
-      <img src="../assets/img/shoes.jpg" class="active" alt="shoes"/>
-      <img src="../assets/img/shoes_1.jpg" alt="shoes"/>
-      <img src="../assets/img/shoes_2.jpg" alt="shoes"/>
-      <img src="../assets/img/shoes_3.jpg" alt="shoes"/>
-      <img src="../assets/img/shoes_4.jpg" alt="shoes"/>
-      <img src="../assets/img/twoCities.jpg" alt="Fresno Two Cities"/>
-      <img src="../assets/img/jersey_medal.jpg" alt="Fresno Two Cities"/>
-      <video src="../assets/videos/Xiengkhoung_Jersey_Giveaway.mp4" muted autoplay loop playsinline></video>
-      <img src="../assets/img/mcnight_2Cities_PR.jpg" alt="Fresno Two Cities"/>
-      <img src="../assets/img/students_1.jpg" alt="Fresno Two Cities"/>
-      <img src="../assets/img/twocities_1.jpg" alt="Fresno Two Cities"/>
-      <video src="../assets/videos/students_BanPawhai_2024.mp4" muted autoplay loop playsinline></video>
+    <div id="imageModal" class="modal" onclick="closeModal()">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="imgFull">
     </div>
 
-    <div class="grid">
-      <section class="card">
-        <div class="totalRow">
-          <span class="totalLabel">Total Raised</span>
-          <span id="total" class="total">$0</span>
-          <span class="goal">of <strong id="goalLabel">$1,000</strong> goal</span>
+    <div class="document">
+        <div class="hero-container">
+            <div class="bobby-pin"></div>
+            <div class="polaroid" onclick="openModal(document.getElementById('heroImg'))">
+                <img src="assets/mcnight_gb.jpg" alt="McNight Thao" id="heroImg">
+                <div class="polaroid-caption">
+                    <strong>McNight Thao</strong><br>
+                    Existential Nomad
+                </div>
+            </div>
         </div>
-        <div class="progressTrack"><div id="bar" class="progressBar"></div></div>
-        <div class="row">
-          <span>Progress: <span id="pct" class="pct">0%</span></span>
-          <span id="lastUpdated" class="pill">Last updated — just now</span>
-        </div>
-        <div style="margin-top:18px; display:flex; gap:12px; flex-wrap:wrap">
-          <a class="btn primary" id="donateBtn" href="#" target="_blank">Donate on Zeffy</a>
-        </div>
-        <p id="err" class="error" style="display:none; margin-top:12px"></p>
-      </section>
 
-      <aside class="card side">
-        <h3 style="text-align: center;">About the Run</h3>
-        <div class="list">
-          <div>🏃‍♂️ <span><strong>Birthday Marathon</strong> — Honolulu, during McNight's birthday weekend.</span></div>
-          <div>📅 <span><strong>Dates:</strong> Dec 13–14, 2025</span></div>
-          <div>🎯 <span><strong>Goal:</strong> $1,000</span></div>
-          <div>🌏 <span><strong>Impact:</strong> A Hopeful Encounter’s overseas projects in Southeast Asia</span></div>
+        <div class="content">
+            <span id="typewriter-text"></span><span class="cursor"></span>
         </div>
-      </aside>
     </div>
 
-  </div>
+    <div id="clippy-container" onclick="toggleMenu()">
+        <div id="speech-bubble">
+            <strong>It looks like you're trying to explore this site.</strong> Would you like help?
+            <ul style="margin: 10px 0 0 0; padding: 0; list-style: none;">
+                <li><a href="#" style="color: blue; text-decoration: none;">> About Me</a></li>
+                <li><a href="#" style="color: blue; text-decoration: none;">> Fundraisers</a></li>
+            </ul>
+        </div>
+        <div class="clippy-icon">
+            <img src="assets/clippy.gif" alt="Clippy">
+        </div>
+    </div>
 
- <script>
-  const MANUAL_TOTAL = 1177; // 👈 put your current total here
-  const FUNDRAISING_GOAL = 1000;
-  const ZEFFY_DONATE_URL = "https://www.zeffy.com/en-US/donation-form/mcnights-birthday-marathon-fundraiser";
+    <script>
+        // Name and title removed from the string to prevent double-display
+        const text = `
+THE "SHORT" STORY
+My personal journey looks less like a straight line and more like a scenic route... (Click Clippy to naviate site!)
 
-  document.getElementById('donateBtn').href = ZEFFY_DONATE_URL;
-  document.getElementById('goalLabel').textContent = `$${FUNDRAISING_GOAL.toLocaleString()}`;
-  const fmt = n => `$${Number(n).toLocaleString(undefined, {maximumFractionDigits:0})}`;
+THE JOURNEY: FROM CODE TO COMMUNITY
+• The Tech Roots: It all started at a technical magnet high school. That foundation led me to earn my Bachelor’s degree in Computer Engineering.
+• The Cubicle Crisis: My first "real" job was coding for a startup. The reality of staring at a screen led to major burnout. I realized I was missing a human connection.
+• The Pivot: After a reality check, I took an IT role at a local high school. I realized I didn’t just want to work with hardware; I wanted to work with people.
+• The Season of "Yes": I spent years volunteering across the city. Through this, I met a mentor who introduced me to a grassroots nonprofit with a massive dream.
 
-  function refresh(){
-    const totalEl = document.getElementById('total');
-    const pctEl = document.getElementById('pct');
-    const barEl = document.getElementById('bar');
-    const total = MANUAL_TOTAL;
-    totalEl.textContent = fmt(total);
-    const pct = Math.max(0, Math.min(100, Math.round((total / FUNDRAISING_GOAL) * 100)));
-    pctEl.textContent = pct + '%';
-    barEl.style.width = pct + '%';
-    document.getElementById('lastUpdated').textContent = 'Last updated — manual entry';
-  }
+THE LEAP OF FAITH
+I took a two-week solo trip to Switzerland to clear my head. I came back, traded my "Senior Programmer" title for a mission I believed in, and stepped into my true calling.
 
-  refresh();
+MY PHILOSOPHY
+"Your journey through LIFE isn't always straight lines. Sometimes the detour ends up being the real destination."`;
 
-  // Slideshow rotation (still works)
-  const slides = document.querySelectorAll('.slideshow img, .slideshow video');
-  let current = 0;
-  setInterval(() => {
-    slides[current].classList.remove('active');
-    current = (current + 1) % slides.length;
-    slides[current].classList.add('active');
-  }, 7000);
-</script>
+        let i = 0;
+        const speed = 15;
 
+        function typeWriter() {
+            if (i < text.length) {
+                document.getElementById("typewriter-text").textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+
+        function toggleMenu() {
+            const bubble = document.getElementById('speech-bubble');
+            bubble.style.display = (bubble.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function openModal(imgElement) {
+            document.getElementById("imageModal").style.display = "block";
+            document.getElementById("imgFull").src = imgElement.src;
+        }
+
+        function closeModal() {
+            document.getElementById("imageModal").style.display = "none";
+        }
+
+        window.onload = typeWriter;
+    </script>
 </body>
 </html>
