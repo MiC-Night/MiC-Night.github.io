@@ -220,6 +220,11 @@
     current = (current + 1) % slides.length;
     slides[current].classList.add('active');
   }, 7000);
+
+          function toggleMenu() {
+            const bubble = document.getElementById('speech-bubble');
+            bubble.style.display = (bubble.style.display === 'block') ? 'none' : 'block';
+        };
 </script>
 
 </body>
